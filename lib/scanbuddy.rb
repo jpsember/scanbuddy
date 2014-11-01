@@ -19,42 +19,14 @@ class ScanBuddyApp
     arg.to_i
   end
 
-  def resize(pic)
+  def resize(original, dest)
     w_max = (@dpi * 8.5).to_i
     h_max = @dpi * 11
 
-    w = pic_arg(pic,"pixelWidth")
-    h = pic_arg(pic,"pixelHeight")
+    cmd = "convert \"#{original}\" -resize #{w_max}x#{h_max}\\> \"#{dest}\""
 
-    if w <= w_max and h <= h_max
-      puts("Not resizing #{pic}, dimensions (#{w},#{h}) not greater than max #{w_max},#{h_max}") if @verbose
-      return
-    end
-
-    puts("Resizing, dimensions (#{w},#{h}) greater than max #{w_max},#{h_max}") if @verbose
-
-    max_dim = [w_max,h_max].max
-    cmd = "sips --resampleHeightWidthMax #{max_dim} \"#{pic}\""
     puts("#{cmd}") if @verbose
     scall(cmd)
-  end
-
-  def proc_dir(dirname)
-    fl = Dir.entries(dirname)
-    fl.each do |x|
-      next if x == '.' or x == '..'
-      y = File.join(dirname,x)
-      if File.directory?(y)
-        proc_dir(y)
-      else
-        ext = File.extname(x).downcase
-        if ext.size > 0
-          ext = ext[1..-1]
-        end
-        next if not IMG_EXT.member?(ext)
-        resize(y)
-      end
-    end
   end
 
   def run(argv = nil)
@@ -179,9 +151,7 @@ class ScanBuddyApp
       pic_dest = File.join(@tmp_dir,file_num.to_s+".jpeg")
       file_num += 1
 
-      FileUtils.cp(pic_orig,pic_dest)
-
-      resize(pic_dest)
+      resize(pic_orig,pic_dest)
       @cvt_files << pic_dest
     end
   end
