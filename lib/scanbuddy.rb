@@ -89,6 +89,8 @@ class ScanBuddyApp
       match = false
       SKIP_FILE_PATTERNS.each{|pat| match ||= (pat =~ f)}
       next if match
+      full_path = File.join(@dir,f)
+      next if File.directory?(full_path)
 
       fail("Unexpected file '#{f}' in directory #{@dir}") if f !~ JPEG_FILE_PATTERN
       @inp_files << f

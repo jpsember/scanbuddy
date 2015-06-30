@@ -2,7 +2,7 @@ require 'rake'
 
 Gem::Specification.new do |s|
   s.name        = 'scanbuddy'
-  s.version     = '0.0.0'
+  s.version     = '0.1.0'
   s.date        = '2014-10-31'
   s.summary     = "Combine jpegs into pdf"
   s.description = "Processes a directory of jpegs, resampling to a reasonable size, and combining into a single pdf"
